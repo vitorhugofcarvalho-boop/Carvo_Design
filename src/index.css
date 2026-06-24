@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-base: #0C0C14;
+  --color-brand-primary: #FF5C00;
+  --color-brand-deep: #1A1A2E;
+  --color-brand-accent: #FFCC00;
+  --color-brand-cream: #F7F4EF;
+  --color-brand-platinum: #F0EDE6;
+  --color-brand-charcoal: #0C0C14;
+  --color-brand-deep-hover: #242444;
+  --color-brand-danger: #EF4444;
+  --color-brand-success: #22C55E;
+  --color-brand-warning: #F59E0B;
+
+  --font-heading: "Bricolage Grotesque", sans-serif;
+  --font-body: "Space Grotesk", sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-brand-base);
+  color: var(--color-brand-platinum);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1A1A2E 25%, #242444 50%, #1A1A2E 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-fade {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-slide {
+  animation: slideUp 0.25s ease-out;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A2A44;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3A3A5C;
+}
+
+.card-hover {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-hover:hover {
+  border-color: #FF5C00;
+  box-shadow: 0 0 0 1px rgba(255, 92, 0, 0.15);
+}
