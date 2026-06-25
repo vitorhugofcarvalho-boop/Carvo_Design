@@ -54,10 +54,10 @@ export function Modal({
   if (!aberto) return null
 
   return (
-    <div
-      className="anim-fade fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-      onClick={onFechar}
-    >
+      <div
+        className="anim-fade fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+        onPointerDown={(e) => { if (e.target === e.currentTarget) onFechar() }}
+      >
       <div
         ref={painelRef}
         role="dialog"

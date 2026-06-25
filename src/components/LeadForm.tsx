@@ -46,7 +46,7 @@ export function LeadForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Nome *</label>
+            <label className="block text-sm text-brand-platinum">Nome *</label>
             <Input
               value={lead.nome}
               onChange={(e) => atualizar({ nome: e.target.value })}
@@ -56,7 +56,7 @@ export function LeadForm({
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Perfil do Instagram *</label>
+            <label className="block text-sm text-brand-platinum">Perfil do Instagram *</label>
             <Input
               value={lead.perfilInstagram}
               onChange={(e) => atualizar({ perfilInstagram: e.target.value.replace('@', '') })}
@@ -68,7 +68,7 @@ export function LeadForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Link do perfil</label>
+            <label className="block text-sm text-brand-platinum">Link do perfil</label>
             <Input
               value={lead.linkPerfil}
               onChange={(e) => atualizar({ linkPerfil: e.target.value })}
@@ -76,7 +76,7 @@ export function LeadForm({
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Seguidores</label>
+            <label className="block text-sm text-brand-platinum">Seguidores</label>
             <Input
               type="number"
               min="0"
@@ -89,7 +89,7 @@ export function LeadForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Nicho</label>
+            <label className="block text-sm text-brand-platinum">Nicho</label>
             <Input
               value={lead.nicho}
               onChange={(e) => atualizar({ nicho: e.target.value })}
@@ -97,7 +97,7 @@ export function LeadForm({
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Produto / Oferta</label>
+            <label className="block text-sm text-brand-platinum">Produto / Oferta</label>
             <Input
               value={lead.produtoOferta}
               onChange={(e) => atualizar({ produtoOferta: e.target.value })}
@@ -108,7 +108,7 @@ export function LeadForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Tipo de oferta</label>
+            <label className="block text-sm text-brand-platinum">Tipo de oferta</label>
             <Select
               value={lead.tipoOferta}
               onChange={(e) => atualizar({ tipoOferta: e.target.value as TipoOferta })}
@@ -119,7 +119,7 @@ export function LeadForm({
             </Select>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Link da oferta</label>
+            <label className="block text-sm text-brand-platinum">Link da oferta</label>
             <Input
               value={lead.linkOferta}
               onChange={(e) => atualizar({ linkOferta: e.target.value })}
@@ -133,7 +133,7 @@ export function LeadForm({
         <p className="text-xs text-brand-platinum/50 uppercase tracking-wide font-medium">Percepções</p>
 
         <div className="space-y-1.5">
-          <label className="text-sm text-brand-platinum">Sinal de venda percebido</label>
+          <label className="block text-sm text-brand-platinum">Sinal de venda percebido</label>
           <Textarea
             value={lead.sinalVendaPercebido}
             onChange={(e) => atualizar({ sinalVendaPercebido: e.target.value })}
@@ -144,7 +144,7 @@ export function LeadForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Problema visual percebido</label>
+            <label className="block text-sm text-brand-platinum">Problema visual percebido</label>
             <Textarea
               value={lead.problemaVisualPercebido}
               onChange={(e) => atualizar({ problemaVisualPercebido: e.target.value })}
@@ -153,7 +153,7 @@ export function LeadForm({
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm text-brand-platinum">Ponto positivo do perfil</label>
+            <label className="block text-sm text-brand-platinum">Ponto positivo do perfil</label>
             <Textarea
               value={lead.pontoPositivo}
               onChange={(e) => atualizar({ pontoPositivo: e.target.value })}
@@ -164,7 +164,7 @@ export function LeadForm({
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm text-brand-platinum">Oportunidade visual</label>
+          <label className="block text-sm text-brand-platinum">Oportunidade visual</label>
           <Textarea
             value={lead.oportunidadeVisual}
             onChange={(e) => atualizar({ oportunidadeVisual: e.target.value })}
@@ -183,7 +183,7 @@ export function LeadForm({
         <p className="text-xs text-brand-platinum/50 uppercase tracking-wide font-medium">Acompanhamento</p>
 
         <div className="space-y-1.5">
-          <label className="text-sm text-brand-platinum">Próxima ação</label>
+          <label className="block text-sm text-brand-platinum">Próxima ação</label>
           <Input
             value={lead.proximaAcao}
             onChange={(e) => atualizar({ proximaAcao: e.target.value })}
@@ -192,7 +192,7 @@ export function LeadForm({
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm text-brand-platinum">Observações</label>
+          <label className="block text-sm text-brand-platinum">Observações</label>
           <Textarea
             value={lead.observacoes}
             onChange={(e) => atualizar({ observacoes: e.target.value })}

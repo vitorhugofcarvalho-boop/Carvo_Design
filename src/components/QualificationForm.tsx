@@ -34,7 +34,7 @@ export function QualificationForm({
 
       {(Object.keys(CRITERIA_LABELS) as (keyof QualificationCriteria)[]).map((field) => (
         <div key={field} className="space-y-1.5">
-          <label className="text-sm text-brand-platinum">{CRITERIA_LABELS[field]}</label>
+          <label className="block text-sm text-brand-platinum">{CRITERIA_LABELS[field]}</label>
           <div className="flex gap-1">
             {CRITERIA_OPTIONS.map((opt) => (
               <button

@@ -104,7 +104,7 @@ export function WeeklyAnalysisPage() {
         <h2 className="text-sm font-semibold text-brand-platinum mb-4">Observações da semana</h2>
         <div className="space-y-4">
           <div>
-            <label className="text-sm text-brand-platinum/70">Nichos que mais responderam</label>
+            <label className="block text-sm text-brand-platinum/70">Nichos que mais responderam</label>
             <Input
               value={form.nichosQueResponderam}
               onChange={(e) => setForm({ ...form, nichosQueResponderam: e.target.value })}
@@ -113,7 +113,7 @@ export function WeeklyAnalysisPage() {
             />
           </div>
           <div>
-            <label className="text-sm text-brand-platinum/70">Mensagem que mais gerou resposta</label>
+            <label className="block text-sm text-brand-platinum/70">Mensagem que mais gerou resposta</label>
             <Input
               value={form.mensagemQueGerouResposta}
               onChange={(e) => setForm({ ...form, mensagemQueGerouResposta: e.target.value })}
@@ -122,7 +122,7 @@ export function WeeklyAnalysisPage() {
             />
           </div>
           <div>
-            <label className="text-sm text-brand-platinum/70">Principais objeções percebidas</label>
+            <label className="block text-sm text-brand-platinum/70">Principais objeções percebidas</label>
             <Textarea
               value={form.objecoes}
               onChange={(e) => setForm({ ...form, objecoes: e.target.value })}
@@ -132,7 +132,7 @@ export function WeeklyAnalysisPage() {
             />
           </div>
           <div>
-            <label className="text-sm text-brand-platinum/70">Aprendizado da semana</label>
+            <label className="block text-sm text-brand-platinum/70">Aprendizado da semana</label>
             <Textarea
               value={form.aprendizado}
               onChange={(e) => setForm({ ...form, aprendizado: e.target.value })}
