@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LogIn, UserPlus, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 
 export function LoginPage() {
   const { user, login, signup } = useAuth()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
+  const redirect = params.get('redirect')
 
   if (user) {
-    navigate('/', { replace: true })
+    navigate(redirect || '/', { replace: true })
     return null
   }
   const [modo, setModo] = useState<'login' | 'signup'>('login')
@@ -44,7 +46,7 @@ export function LoginPage() {
       setSucesso('Conta criada! Verifique seu e-mail para confirmar (ou já faça login).')
       setModo('login')
     } else {
-      navigate('/', { replace: true })
+      navigate(redirect || '/', { replace: true })
     }
   }
 

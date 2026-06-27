@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-deep: #0C0C14;
+  --color-brand-base: #1A1A2E;
+  --color-brand-primary: #FF5C00;
+  --color-brand-accent: #FFCC00;
+  --color-brand-platinum: #F0EDE6;
+  --color-brand-deep-hover: #2A2A3E;
+  --color-brand-danger: #EF4444;
+  --color-brand-success: #22C55E;
+  --font-heading: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "Space Grotesk", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--color-brand-deep);
+  color: var(--color-brand-platinum);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar minimalista */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-deep-hover);
+  border-radius: 2px;
+}
+
+/* Inputs padrão */
+input, select, textarea {
+  font-family: var(--font-body);
+}

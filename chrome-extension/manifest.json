@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "ProspectOS Capture",
+  "version": "0.1.0",
+  "description": "Capture e qualifique leads do Instagram diretamente no ProspectOS.",
+  "permissions": ["sidePanel", "storage", "activeTab"],
+  "host_permissions": ["https://www.instagram.com/*"],
+  "action": {
+    "default_icon": "icon.svg"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background/serviceWorker.js",
+    "type": "module"
+  },
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  }
+}
