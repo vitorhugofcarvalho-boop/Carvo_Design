@@ -8,7 +8,8 @@
   no Supabase com índices por lead_id, type e timestamp.
 */
 
-import type { ActionLog, TipoContato } from '@/types'
+import type { ActionLog, ActionType, TipoContato } from '@/types'
+import { store } from './store'
 
 const ACTIONS_KEY = 'prospectos:actions'
 const BACKFILL_KEY = 'prospectos:actions_backfilled'
@@ -32,7 +33,7 @@ export const actionStore = {
     localStorage.setItem(ACTIONS_KEY, JSON.stringify(actions))
   },
 
-  registrar(action: Omit<ActionLog, 'id'> & { timestamp?: number }): void {
+  registrar(action: Omit<ActionLog, 'id' | 'timestamp'> & { timestamp?: number }): void {
     const entry: ActionLog = {
       ...action,
       id: gerarId(),

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import {
-  Users, Send, MessageCircle, TrendingUp, ListChecks,
+  Users, Send, MessageCircle, Target, TrendingUp, ListChecks,
   Calendar, FileText, DollarSign, Activity,
 } from 'lucide-react'
 import { useLeads } from '@/hooks/useLeads'
