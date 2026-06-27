@@ -229,7 +229,7 @@ export function criarLeadPadrao(): Lead {
     qtdFollowUps: 0,
     proximaAcao: '',
     historico: [],
-    fonte: '',
+    fonte: 'manual',
     criadoEm: Date.now(),
     atualizadoEm: Date.now(),
   }

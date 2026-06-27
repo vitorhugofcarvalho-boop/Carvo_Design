@@ -33,6 +33,8 @@ function mapExtensionToLead(raw: Record<string, unknown>): Partial<Lead> {
   if (raw.visualOpportunity) m.oportunidadeVisual = String(raw.visualOpportunity)
   if (raw.notes) m.observacoes = String(raw.notes)
 
+  m.fonte = 'extensao'
+
   const q = raw.qualification
   if (q && typeof q === 'object') {
     const criteria = (q as Record<string, unknown>).criteria as Record<string, number> | undefined
@@ -69,7 +71,7 @@ export function NewLeadPage() {
     if (importedFromExtension && encodedData) {
       try {
         const raw = JSON.parse(decodeURIComponent(encodedData))
-        const lead = { ...criarLeadPadrao(), ...mapExtensionToLead(raw), fonte: 'chrome-extension' }
+        const lead = { ...criarLeadPadrao(), ...mapExtensionToLead(raw) }
         return lead
       } catch {
         // invalid data — fall through to empty form

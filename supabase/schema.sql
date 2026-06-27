@@ -27,7 +27,7 @@ create table if not exists leads (
   qtd_followups integer not null default 0,
   proxima_acao text not null default '',
   historico jsonb not null default '[]',
-  fonte text not null default '',
+  fonte text not null default 'manual',
   criado_em bigint not null default extract(epoch from now()) * 1000,
   atualizado_em bigint not null default extract(epoch from now()) * 1000
 );

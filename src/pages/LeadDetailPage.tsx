@@ -215,6 +215,12 @@ export function LeadDetailPage() {
                 <p className="text-xs text-brand-platinum/40 mb-1">Prioridade</p>
                 <Badge className={prioInfo.cor}>{prioInfo.rotulo}</Badge>
               </div>
+              {lead.fonte === 'extensao' && (
+                <div>
+                  <p className="text-xs text-brand-platinum/40 mb-1">Origem</p>
+                  <Badge className="bg-violet-500/15 text-violet-300">Extensão</Badge>
+                </div>
+              )}
               <div>
                 <p className="text-xs text-brand-platinum/40 mb-1">Nota</p>
                 <p className="text-2xl font-bold text-brand-primary">{lead.nota}/10</p>

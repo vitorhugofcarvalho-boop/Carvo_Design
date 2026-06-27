@@ -91,7 +91,12 @@ export function PipelinePage() {
                     >
                       <div className="flex items-start justify-between gap-1">
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-brand-platinum truncate">{l.nome}</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-semibold text-brand-platinum truncate">{l.nome}</p>
+                            {l.fonte === 'extensao' && (
+                              <span className="text-[10px] text-violet-400 font-medium shrink-0">Extensão</span>
+                            )}
+                          </div>
                           <p className="text-[11px] text-brand-platinum/40">@{l.perfilInstagram}</p>
                         </div>
                         <Badge className={prioInfo.cor + ' shrink-0'}>{prioInfo.rotulo}</Badge>

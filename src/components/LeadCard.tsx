@@ -34,6 +34,9 @@ export function LeadCard({
         {statusInfo && (
           <Badge className={statusInfo.cor}>{statusInfo.rotulo}</Badge>
         )}
+        {lead.fonte === 'extensao' && (
+          <Badge className="bg-violet-500/15 text-violet-300">Extensão</Badge>
+        )}
         {lead.seguidores > 0 && (
           <span className="text-[11px] text-brand-platinum/30 tabular-nums">
             {formatarSeguidores(lead.seguidores)} seg

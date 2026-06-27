@@ -1,10 +1,5 @@
 import type { Lead, TipoOferta } from '@/types'
 import { criarLeadPadrao, TIPOS_OFERTA } from '@/types'
-import { calcularNota, definirPrioridade } from '@/utils/scoring'
-
-function clamp(v: number): number {
-  return Math.min(Math.max(Math.floor(v), 0), 2)
-}
 
 export function importLeadFromJson(raw: Record<string, unknown>): Lead {
   const lead = criarLeadPadrao()
@@ -29,21 +24,7 @@ export function importLeadFromJson(raw: Record<string, unknown>): Lead {
   if (typeof raw.visualOpportunity === 'string') lead.oportunidadeVisual = raw.visualOpportunity
   if (typeof raw.notes === 'string') lead.observacoes = raw.notes
 
-  const qual = raw.qualification
-  if (qual && typeof qual === 'object') {
-    const criteria = (qual as Record<string, unknown>).criteria as Record<string, unknown> | undefined
-    if (criteria) {
-      lead.qualification = {
-        temProdutoClaro: clamp(Number(criteria.hasClearOffer ?? 0)),
-        temCtaVenda: clamp(Number(criteria.hasCTAOrSalesLink ?? 0)),
-        temAudienciaAtiva: clamp(Number(criteria.hasActiveAudience ?? 0)),
-        visualPoderiaMelhorar: clamp(Number(criteria.visualCanImprove ?? 0)),
-        consigoAjudar: clamp(Number(criteria.canClearlyHelp ?? 0)),
-      }
-      lead.nota = calcularNota(lead.qualification)
-      lead.prioridade = definirPrioridade(lead.nota)
-    }
-  }
+  lead.fonte = 'extensao'
 
   return lead
 }

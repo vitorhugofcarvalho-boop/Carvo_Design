@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Capture e qualifique leads do Instagram diretamente no ProspectOS.",
   "permissions": ["sidePanel", "storage", "activeTab", "tabs", "scripting"],
-  "host_permissions": ["https://www.instagram.com/*"],
+  "host_permissions": ["https://www.instagram.com/*", "https://*.supabase.co/*"],
   "action": {
     "default_icon": "icon.svg"
   },
