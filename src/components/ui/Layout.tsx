@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
   Users,
@@ -11,7 +11,9 @@ import {
   Settings,
   Menu,
   X,
+  LogOut,
 } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
 
 const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -30,6 +32,13 @@ const NAV_SECUNDARIA = NAV_ITEMS.slice(4)
 export function Layout() {
   const [menuAberto, setMenuAberto] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+  const { logout, user } = useAuth()
+
+  async function sair() {
+    await logout()
+    navigate('/login')
+  }
 
   function linkClasses(ativo: boolean, mobile?: boolean): string {
     if (mobile) {
@@ -87,6 +96,16 @@ export function Layout() {
             )
           })}
         </nav>
+
+        <div className="border-t border-brand-deep-hover pt-3 mt-3">
+          <button
+            onClick={sair}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-brand-platinum/40 transition-colors hover:bg-brand-deep hover:text-brand-danger"
+          >
+            <LogOut className="size-4" />
+            Sair
+          </button>
+        </div>
       </aside>
 
       {/* Conteúdo */}
@@ -162,6 +181,14 @@ export function Layout() {
                   </NavLink>
                 )
               })}
+              <hr className="border-brand-deep-hover my-2" />
+              <button
+                onClick={() => { setMenuAberto(false); sair() }}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-brand-platinum/40 transition-colors hover:bg-brand-deep hover:text-brand-danger"
+              >
+                <LogOut className="size-4" />
+                Sair
+              </button>
             </nav>
           </div>
         </div>
