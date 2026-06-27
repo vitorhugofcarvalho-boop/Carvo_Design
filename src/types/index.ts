@@ -192,6 +192,7 @@ export interface Lead {
   qtdFollowUps: number
   proximaAcao: string
   historico: ContactRecord[]
+  fonte: string
   criadoEm: number
   atualizadoEm: number
 }
@@ -228,6 +229,7 @@ export function criarLeadPadrao(): Lead {
     qtdFollowUps: 0,
     proximaAcao: '',
     historico: [],
+    fonte: '',
     criadoEm: Date.now(),
     atualizadoEm: Date.now(),
   }

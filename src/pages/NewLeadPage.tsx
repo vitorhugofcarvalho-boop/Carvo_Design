@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, Upload, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Upload, AlertCircle, Check, Loader2 } from 'lucide-react'
 import type { Lead } from '@/types'
 import { criarLeadPadrao, TIPOS_OFERTA } from '@/types'
 import { calcularNota, definirPrioridade } from '@/utils/scoring'
@@ -23,7 +23,7 @@ function mapExtensionToLead(raw: Record<string, unknown>): Partial<Lead> {
     m.tipoOferta = TIPOS_OFERTA.some((t) => t.valor === tipo) ? (tipo as Lead['tipoOferta']) : 'outro'
   }
   if (raw.followers) {
-    const n = Number(raw.followers)
+    const n = Number(String(raw.followers).replace(/[.,]/g, ''))
     if (!isNaN(n)) m.seguidores = n
   }
   if (raw.bioLink) m.linkOferta = String(raw.bioLink)
@@ -69,13 +69,78 @@ export function NewLeadPage() {
     if (importedFromExtension && encodedData) {
       try {
         const raw = JSON.parse(decodeURIComponent(encodedData))
-        return { ...criarLeadPadrao(), ...mapExtensionToLead(raw) }
+        const lead = { ...criarLeadPadrao(), ...mapExtensionToLead(raw), fonte: 'chrome-extension' }
+        return lead
       } catch {
         // invalid data — fall through to empty form
       }
     }
     return criarLeadPadrao()
   })
+
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>(
+    importedFromExtension ? 'idle' : 'idle'
+  )
+
+  useEffect(() => {
+    if (importedFromExtension && autoSaveStatus === 'idle') {
+      setAutoSaveStatus('saving')
+      putLead(leadData)
+      setAutoSaveStatus('saved')
+    }
+  }, [importedFromExtension, autoSaveStatus, leadData, putLead])
+
+  if (importedFromExtension) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        {autoSaveStatus === 'saving' && (
+          <div className="text-center space-y-3">
+            <Loader2 className="size-8 text-brand-primary animate-spin mx-auto" />
+            <p className="text-sm text-brand-platinum/60">Salvando lead...</p>
+          </div>
+        )}
+        {autoSaveStatus === 'saved' && (
+          <div className="text-center space-y-4">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-success/15">
+              <Check className="size-7 text-brand-success" />
+            </div>
+            <div>
+              <p className="text-base font-medium text-brand-platinum">Lead salvo com sucesso</p>
+              <p className="mt-1 text-xs text-brand-platinum/40">
+                {leadData.nome || leadData.perfilInstagram || 'Lead'} capturado via extensão ProspectOS Capture
+              </p>
+            </div>
+            <div className="flex gap-2 justify-center">
+              <Button onClick={() => navigate('/leads')} variante="primario">
+                Ver leads
+              </Button>
+              <Button onClick={() => { setAutoSaveStatus('idle'); navigate('/leads/new') }} variante="secundario">
+                Novo lead
+              </Button>
+            </div>
+          </div>
+        )}
+        {autoSaveStatus === 'error' && (
+          <div className="text-center space-y-4">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-danger/15">
+              <AlertCircle className="size-7 text-brand-danger" />
+            </div>
+            <div>
+              <p className="text-base font-medium text-brand-platinum">Erro ao salvar</p>
+              <p className="mt-1 text-xs text-brand-platinum/40">
+                Tente novamente ou salve manualmente.
+              </p>
+            </div>
+            <div className="flex gap-2 justify-center">
+              <Button onClick={() => navigate('/leads')} variante="secundario">
+                Voltar
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   function handleJsonImport() {
     setJsonError('')
@@ -103,24 +168,8 @@ export function NewLeadPage() {
 
       <PageHeader
         titulo="Novo lead"
-        subtitulo={importedFromExtension ? 'Importado da extensão ProspectOS Capture' : 'Cadastre um novo lead'}
+        subtitulo="Cadastre um novo lead"
       />
-
-      {importedFromExtension && (
-        <Card className="mb-5 border-brand-primary/30 bg-brand-primary/5">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="mt-0.5 size-4 shrink-0 text-brand-primary" />
-            <div>
-              <p className="text-sm font-medium text-brand-platinum">
-                Lead importado da extensão ProspectOS Capture
-              </p>
-              <p className="mt-0.5 text-xs text-brand-platinum/50">
-                Revise os dados antes de salvar.
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
 
       <div className="mb-6">
         <LeadForm

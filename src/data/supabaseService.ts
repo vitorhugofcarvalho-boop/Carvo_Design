@@ -28,6 +28,7 @@ function mapLeadToDB(lead: Lead): Record<string, unknown> {
     qtd_followups: lead.qtdFollowUps,
     proxima_acao: lead.proximaAcao,
     historico: lead.historico,
+    fonte: lead.fonte,
     criado_em: lead.criadoEm,
     atualizado_em: lead.atualizadoEm,
   }
@@ -59,6 +60,7 @@ function mapLeadFromDB(row: Record<string, unknown>): Lead {
     qtdFollowUps: row.qtd_followups as number,
     proximaAcao: row.proxima_acao as string,
     historico: row.historico as Lead['historico'],
+    fonte: (row.fonte as string) || '',
     criadoEm: row.criado_em as number,
     atualizadoEm: row.atualizado_em as number,
   }
