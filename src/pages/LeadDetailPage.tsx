@@ -16,6 +16,7 @@ import { ContactHistory } from '@/components/ContactHistory'
 import { MessageTemplates } from '@/components/MessageTemplates'
 import { StatusSelect } from '@/components/StatusSelect'
 import { formatarData, formatarSeguidores, dataRelativa, timestampParaInputDate, dataParaTimestamp } from '@/utils/formatting'
+import { actionStore } from '@/data/actionStore'
 
 export function LeadDetailPage() {
   const { id = '' } = useParams()
@@ -44,7 +45,15 @@ export function LeadDetailPage() {
 
   function atualizar(campo: Partial<Lead>) {
     if (!lead) return
+    const oldStatus = lead.status
     putLead({ ...lead, ...campo, atualizadoEm: Date.now() })
+    if (campo.status && campo.status !== oldStatus) {
+      actionStore.registrar({
+        leadId: lead.id,
+        type: 'status_changed',
+        description: `${STATUS_LEAD.find((s) => s.valor === oldStatus)?.rotulo ?? oldStatus} → ${STATUS_LEAD.find((s) => s.valor === campo.status)?.rotulo ?? campo.status}`,
+      })
+    }
   }
 
   function adicionarContato(record: ContactRecord) {
@@ -62,6 +71,11 @@ export function LeadDetailPage() {
       updated.primeiraAbordagem = record.date
     }
     putLead(updated)
+    actionStore.registrar({
+      leadId: lead.id,
+      type: actionStore.mapearTipoContato(record.type),
+      description: record.notes,
+    })
   }
 
   const instagramUrl = lead.perfilInstagram

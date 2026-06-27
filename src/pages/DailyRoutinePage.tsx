@@ -1,20 +1,40 @@
-import { CheckSquare, BookOpen } from 'lucide-react'
+import { useEffect, useMemo } from 'react'
+import { CheckSquare, BookOpen, Target } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useChecklist } from '@/hooks/useChecklist'
 import { useLeads } from '@/hooks/useLeads'
+import { useMetrics } from '@/hooks/useMetrics'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Textarea } from '@/components/ui/Input'
+import { cn } from '@/utils/cn'
 
 export function DailyRoutinePage() {
-  const { items, toggleItem, aprendizado, salvarAprendizado } = useChecklist()
+  const { items, toggleItem, aprendizado, salvarAprendizado, syncWithGoals } = useChecklist()
   const { leads } = useLeads()
+  const { goals } = useMetrics()
   const navigate = useNavigate()
+
+  // Auto-completar metas
+  useEffect(() => {
+    syncWithGoals(
+      goals.map((g) => ({ type: g.type as 'lead_created' | 'lead_qualified' | 'approach_sent' | 'followup_sent' | 'proposal_sent', done: g.done })),
+    )
+  }, [goals, syncWithGoals])
 
   const concluidos = items.filter((i) => i.done).length
   const total = items.length
   const progresso = total > 0 ? Math.round((concluidos / total) * 100) : 0
+
+  const metasCard = useMemo(
+    () =>
+      goals.map((g) => ({
+        ...g,
+        label: `${g.label.replace(/^\d+ /, '')} (${g.current}/${g.target})`,
+      })),
+    [goals],
+  )
 
   return (
     <div>
@@ -41,24 +61,40 @@ export function DailyRoutinePage() {
             {items.map((item) => (
               <label
                 key={item.id}
-                className="flex items-start gap-3 cursor-pointer group"
+                className={cn(
+                  'flex items-start gap-3 group',
+                  item.goalType ? '' : 'cursor-pointer',
+                )}
               >
                 <div className="mt-0.5">
                   <input
                     type="checkbox"
                     checked={item.done}
-                    onChange={() => toggleItem(item.id)}
-                    className="size-4 rounded border-brand-deep-hover bg-brand-base text-brand-primary focus:ring-brand-primary/60 focus:ring-offset-0 cursor-pointer"
+                    onChange={() => { if (!item.goalType) toggleItem(item.id) }}
+                    disabled={!!item.goalType}
+                    className={cn(
+                      'size-4 rounded border-brand-deep-hover bg-brand-base focus:ring-brand-primary/60 focus:ring-offset-0',
+                      item.goalType
+                        ? 'opacity-60 cursor-default'
+                        : 'text-brand-primary cursor-pointer',
+                    )}
                   />
                 </div>
                 <span
-                  className={`text-sm transition-colors ${
+                  className={cn(
+                    'text-sm transition-colors',
+                    item.goalType && 'text-brand-platinum/50',
                     item.done
                       ? 'text-brand-platinum/30 line-through'
-                      : 'text-brand-platinum'
-                  }`}
+                      : 'text-brand-platinum',
+                  )}
                 >
                   {item.label}
+                  {item.goalType && item.goalTarget && (
+                    <span className="ml-1 text-[11px] text-brand-platinum/30">
+                      (meta automática)
+                    </span>
+                  )}
                 </span>
               </label>
             ))}
@@ -66,6 +102,38 @@ export function DailyRoutinePage() {
         </Card>
 
         <div className="space-y-4">
+          {/* Progresso das metas */}
+          <Card>
+            <h2 className="text-sm font-semibold text-brand-platinum mb-3 flex items-center gap-2">
+              <Target className="size-4 text-brand-accent" />
+              Metas do dia
+            </h2>
+            <div className="space-y-3">
+              {metasCard.map((g) => (
+                <div key={g.id}>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="text-brand-platinum/70">{g.label}</span>
+                    <span className={cn('tabular-nums font-bold', g.done ? 'text-green-400' : 'text-brand-platinum/40')}>
+                      {g.percent}%
+                    </span>
+                  </div>
+                  <div className="h-2 rounded-full bg-brand-base overflow-hidden">
+                    <div
+                      className={cn(
+                        'h-full rounded-full transition-all duration-500',
+                        g.done ? 'bg-green-500' : 'bg-brand-primary',
+                      )}
+                      style={{ width: `${g.percent}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+              {metasCard.length === 0 && (
+                <p className="text-sm text-brand-platinum/40">Nenhuma meta configurada.</p>
+              )}
+            </div>
+          </Card>
+
           <Card>
             <h2 className="text-sm font-semibold text-brand-platinum mb-3 flex items-center gap-2">
               <BookOpen className="size-4 text-brand-accent" />

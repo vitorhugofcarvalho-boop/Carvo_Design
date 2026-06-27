@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Users, Plus, Search, Filter } from 'lucide-react'
 import { useLeads } from '@/hooks/useLeads'
+import { useMetrics } from '@/hooks/useMetrics'
 import type { Lead, LeadStatus, LeadPriority } from '@/types'
 import { STATUS_LEAD, PRIORIDADE } from '@/types'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -11,10 +12,12 @@ import { Modal } from '@/components/ui/Modal'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { LeadCard } from '@/components/LeadCard'
 import { LeadForm } from '@/components/LeadForm'
-import { SkeletonList } from '@/components/ui/Skeleton'
+import { LeadsMetricBar } from '@/components/LeadsMetricBar'
+import { actionStore } from '@/data/actionStore'
 
 export function LeadsPage() {
   const { leads, putLead } = useLeads()
+  const { metrics, refresh } = useMetrics()
   const navigate = useNavigate()
   const [params, setParams] = useSearchParams()
   const [busca, setBusca] = useState('')
@@ -55,6 +58,8 @@ export function LeadsPage() {
           </Button>
         }
       />
+
+      <LeadsMetricBar metrics={metrics} className="mb-4" />
 
       {leads.length > 0 && (
         <div className="mb-4 flex flex-col gap-2 sm:flex-row">
@@ -122,14 +127,22 @@ export function LeadsPage() {
         titulo={editando ? 'Editar lead' : 'Novo lead'}
         onFechar={fechar}
       >
-        <LeadForm
-          inicial={editando ?? undefined}
-          onSalvar={(lead) => {
-            putLead(lead)
-            fechar()
-          }}
-          onCancelar={fechar}
-        />
+          <LeadForm
+            inicial={editando ?? undefined}
+            onSalvar={(lead) => {
+              const isNew = !editando
+              putLead(lead)
+              if (isNew) {
+                actionStore.registrar({ leadId: lead.id, type: 'lead_created', description: `Lead ${lead.nome} criado` })
+              }
+              if (lead.nota >= 5 && isNew) {
+                actionStore.registrar({ leadId: lead.id, type: 'lead_qualified', description: `Lead ${lead.nome} qualificado (nota ${lead.nota})` })
+              }
+              refresh()
+              fechar()
+            }}
+            onCancelar={fechar}
+          />
       </Modal>
     </div>
   )

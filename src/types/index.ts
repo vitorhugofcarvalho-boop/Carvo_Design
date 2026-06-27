@@ -13,6 +13,68 @@ export type LeadStatus =
 
 export type LeadPriority = 'baixa' | 'media' | 'alta' | 'prioridade_maxima'
 
+// ─── Action Log ──────────────────────────────────────
+export type ActionType =
+  | 'lead_created'
+  | 'lead_qualified'
+  | 'approach_sent'
+  | 'followup_sent'
+  | 'status_changed'
+  | 'note_added'
+  | 'response_received'
+  | 'meeting_scheduled'
+  | 'proposal_sent'
+  | 'sale_closed'
+
+export interface ActionLog {
+  id: string
+  leadId: string | null
+  type: ActionType
+  timestamp: number
+  description?: string
+}
+
+// ─── Period Filter ──────────────────────────────────
+export type PeriodKey = 'hoje' | 'ontem' | '7d' | '30d' | 'este_mes' | 'personalizado'
+
+export interface PeriodFilter {
+  key: PeriodKey
+  start: number
+  end: number
+  label: string
+}
+
+export const ACTION_LABELS: Record<ActionType, string> = {
+  lead_created: 'Lead cadastrado',
+  lead_qualified: 'Lead qualificado',
+  approach_sent: 'Abordagem enviada',
+  followup_sent: 'Follow-up enviado',
+  status_changed: 'Status alterado',
+  note_added: 'Observação adicionada',
+  response_received: 'Resposta recebida',
+  meeting_scheduled: 'Reunião marcada',
+  proposal_sent: 'Proposta enviada',
+  sale_closed: 'Venda fechada',
+}
+
+// ─── Daily Goals ────────────────────────────────────
+export type GoalType = 'lead_created' | 'lead_qualified' | 'approach_sent' | 'followup_sent' | 'proposal_sent'
+
+export interface DailyGoal {
+  id: string
+  label: string
+  type: GoalType
+  target: number
+}
+
+export const METAS_PADRAO: DailyGoal[] = [
+  { id: 'g_leads', label: 'Cadastrar 20 leads', type: 'lead_created', target: 20 },
+  { id: 'g_abordagens', label: 'Enviar 20 abordagens', type: 'approach_sent', target: 20 },
+  { id: 'g_followups', label: 'Fazer 10 follow-ups', type: 'followup_sent', target: 10 },
+  { id: 'g_qualificados', label: 'Qualificar 5 leads', type: 'lead_qualified', target: 5 },
+  { id: 'g_propostas', label: 'Enviar 2 propostas', type: 'proposal_sent', target: 2 },
+]
+
 export type TipoOferta =
   | 'mentoria'
   | 'curso'
@@ -175,14 +237,18 @@ export interface ChecklistItem {
   id: string
   label: string
   done: boolean
+  goalType?: GoalType
+  goalTarget?: number
 }
 
 export const CHECKLIST_PADRAO: ChecklistItem[] = [
-  { id: 'buscar_perfis', label: 'Buscar 15 a 20 perfis', done: false },
-  { id: 'qualificar_leads', label: 'Qualificar 5 a 8 leads', done: false },
-  { id: 'registrar_leads', label: 'Registrar leads no app', done: false },
-  { id: 'enviar_dms', label: 'Enviar 3 a 5 DMs personalizadas', done: false },
-  { id: 'followups_pendentes', label: 'Fazer follow-ups pendentes', done: false },
+  // Metas quantitativas (auto-completam)
+  { id: 'g_leads', label: 'Cadastrar 20 leads', done: false, goalType: 'lead_created', goalTarget: 20 },
+  { id: 'g_abordagens', label: 'Enviar 20 abordagens', done: false, goalType: 'approach_sent', goalTarget: 20 },
+  { id: 'g_followups', label: 'Fazer 10 follow-ups', done: false, goalType: 'followup_sent', goalTarget: 10 },
+  { id: 'g_qualificados', label: 'Qualificar 5 leads', done: false, goalType: 'lead_qualified', goalTarget: 5 },
+  { id: 'g_propostas', label: 'Enviar 2 propostas', done: false, goalType: 'proposal_sent', goalTarget: 2 },
+  // Tarefas manuais
   { id: 'atualizar_status', label: 'Atualizar status dos leads', done: false },
   { id: 'aprendizados', label: 'Registrar aprendizados do dia', done: false },
 ]

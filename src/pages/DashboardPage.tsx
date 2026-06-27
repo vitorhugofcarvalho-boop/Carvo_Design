@@ -1,19 +1,26 @@
 import { Link } from 'react-router-dom'
-import { Users, Send, MessageCircle, Target, TrendingUp, ListChecks } from 'lucide-react'
+import {
+  Users, Send, MessageCircle, TrendingUp, ListChecks,
+  Calendar, FileText, DollarSign, Activity,
+} from 'lucide-react'
 import { useLeads } from '@/hooks/useLeads'
+import { useMetrics } from '@/hooks/useMetrics'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { StatCard } from '@/components/ui/StatCard'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { calcularMetricas, leadsParaAbordarHoje, followupsPendentes, leadsSemProximaAcao, leadsQuentes } from '@/utils/dashboard'
+import { PeriodFilter } from '@/components/PeriodFilter'
+import { leadsParaAbordarHoje, followupsPendentes, leadsSemProximaAcao, leadsQuentes } from '@/utils/dashboard'
 import { STATUS_LEAD, PRIORIDADE } from '@/types'
 import { dataRelativa } from '@/utils/formatting'
+import { cn } from '@/utils/cn'
 import { useNavigate } from 'react-router-dom'
 
 export function DashboardPage() {
   const { leads } = useLeads()
   const navigate = useNavigate()
-  const metricas = calcularMetricas(leads)
+  const { metrics, funnel, period, periodKey, alterarPeriodo, definirPersonalizado } = useMetrics()
+
   const abordarHoje = leadsParaAbordarHoje(leads)
   const pendentes = followupsPendentes(leads)
   const semAcao = leadsSemProximaAcao(leads)
@@ -26,52 +33,104 @@ export function DashboardPage() {
         subtitulo="Visão geral da sua prospecção"
       />
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 mb-6">
+      <div className="mb-4">
+        <PeriodFilter value={periodKey} onChange={alterarPeriodo} onPersonalizado={definirPersonalizado} />
+      </div>
+
+      <div className="mb-1">
+        <p className="text-xs text-brand-platinum/30">{period.label}</p>
+      </div>
+
+      {/* Cards de métricas do período */}
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 mb-6">
         <StatCard
-          rotulo="Leads captados"
-          valor={String(metricas.totalLeads)}
+          rotulo="Leads cadastrados"
+          valor={String(metrics.leadsCriados)}
           icone={<Users className="size-5" />}
         />
         <StatCard
           rotulo="Leads qualificados"
-          valor={String(metricas.qualificados)}
+          valor={String(metrics.leadsQualificados)}
           cor="text-blue-400"
           icone={<Target className="size-5" />}
         />
         <StatCard
-          rotulo="DMs enviadas"
-          valor={String(metricas.dmsEnviadas)}
+          rotulo="Abordagens enviadas"
+          valor={String(metrics.abordagensEnviadas)}
           cor="text-amber-400"
           icone={<Send className="size-5" />}
         />
         <StatCard
-          rotulo="Respostas"
-          valor={String(metricas.respostas)}
+          rotulo="Follow-ups feitos"
+          valor={String(metrics.followupsRealizados)}
           cor="text-violet-400"
           icone={<MessageCircle className="size-5" />}
         />
         <StatCard
-          rotulo="Em andamento"
-          valor={String(metricas.conversasAndamento)}
+          rotulo="Ações realizadas"
+          valor={String(metrics.totalAcoes)}
+          cor="text-brand-accent"
+          icone={<Activity className="size-5" />}
+        />
+        <StatCard
+          rotulo="Reuniões marcadas"
+          valor={String(metrics.reunioesMarcadas)}
           cor="text-indigo-400"
+          icone={<Calendar className="size-5" />}
         />
         <StatCard
           rotulo="Propostas enviadas"
-          valor={String(metricas.propostasEnviadas)}
+          valor={String(metrics.propostasEnviadas)}
           cor="text-pink-400"
+          icone={<FileText className="size-5" />}
         />
         <StatCard
-          rotulo="Fechados"
-          valor={String(metricas.fechados)}
+          rotulo="Vendas fechadas"
+          valor={String(metrics.vendasFechadas)}
           cor="text-green-400"
-          icone={<TrendingUp className="size-5" />}
-        />
-        <StatCard
-          rotulo={metricas.taxaResposta !== '—' ? 'Taxa de resposta' : 'Taxa de conversão'}
-          valor={metricas.taxaResposta !== '—' ? metricas.taxaResposta : metricas.taxaConversao}
-          cor="text-brand-accent"
+          icone={<DollarSign className="size-5" />}
         />
       </div>
+
+      {/* Funil de avanço */}
+      {funnel.some((f) => f.count > 0) && (
+        <Card className="mb-6">
+          <h2 className="text-sm font-semibold text-brand-platinum mb-3 flex items-center gap-2">
+            <TrendingUp className="size-4 text-brand-accent" />
+            Funil de avanço
+          </h2>
+          <div className="space-y-2">
+            {funnel.map((f, i) => {
+              const primeiro = i === 0
+              const total = funnel[0]?.count || 1
+              const largura = primeiro ? 100 : Math.round((f.count / total) * 100)
+              return (
+                <div key={f.type}>
+                  <div className="flex items-center justify-between text-xs mb-0.5">
+                    <span className="text-brand-platinum/70">{f.label}</span>
+                    <span className="text-brand-platinum font-bold tabular-nums">{f.count}</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-brand-base overflow-hidden">
+                    <div
+                      className={cn(
+                        'h-full rounded-full transition-all duration-500',
+                        i === 0 && 'bg-brand-primary',
+                        i === 1 && 'bg-amber-500',
+                        i === 2 && 'bg-violet-500',
+                        i === 3 && 'bg-blue-500',
+                        i === 4 && 'bg-indigo-500',
+                        i === 5 && 'bg-pink-500',
+                        i === 6 && 'bg-green-500',
+                      )}
+                      style={{ width: `${largura}%` }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
