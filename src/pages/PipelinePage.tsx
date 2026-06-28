@@ -105,7 +105,7 @@ export function PipelinePage() {
                           {l.linkPerfil && (
                             <button
                               onClick={(e) => { e.stopPropagation(); openInstagramInTab(l.linkPerfil) }}
-                              className="rounded p-0.5 text-brand-platinum/60 transition-colors hover:text-brand-accent"
+                              className="cursor-pointer rounded p-0.5 text-brand-platinum/60 transition-colors hover:text-brand-accent"
                               title="Abrir perfil no Instagram"
                             >
                               <InstagramIcon className="size-3.5" />

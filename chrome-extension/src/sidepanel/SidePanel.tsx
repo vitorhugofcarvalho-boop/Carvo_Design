@@ -92,29 +92,24 @@ export function SidePanel() {
       const url = event.data.url
       if (!url || (!url.startsWith('https://instagram.com/') && !url.startsWith('https://www.instagram.com/'))) return
 
-      ;(async () => {
-        try {
-          const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-          if (tab?.id) {
-            await chrome.tabs.update(tab.id, { url })
+      chrome.runtime.sendMessage(
+        { type: 'OPEN_INSTAGRAM_PROFILE', url },
+        (response) => {
+          if (response?.ok) {
+            setView('qualify')
+            setQualifyingLead({
+              id: event.data.leadId || '',
+              nome: event.data.leadName || '',
+              perfilInstagram: event.data.leadHandle || '',
+              linkPerfil: url,
+            })
+            setQualCriteria(emptyCriteria())
+            setQualNotes('')
           } else {
-            await chrome.tabs.update({ url })
+            showToast('error', 'Não consegui abrir o perfil na guia atual.')
           }
-        } catch {
-          showToast('error', 'Não consegui abrir o perfil na guia atual.')
-          return
-        }
-
-        setView('qualify')
-        setQualifyingLead({
-          id: event.data.leadId || '',
-          nome: event.data.leadName || '',
-          perfilInstagram: event.data.leadHandle || '',
-          linkPerfil: url,
-        })
-        setQualCriteria(emptyCriteria())
-        setQualNotes('')
-      })()
+        },
+      )
     }
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
@@ -499,16 +494,7 @@ export function SidePanel() {
   )
 }
 
-async function openInstagramDirect(url?: string) {
+function openInstagramDirect(url?: string) {
   if (!url) return
-  try {
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true })
-    if (tab?.id) {
-      await chrome.tabs.update(tab.id, { url })
-    } else {
-      await chrome.tabs.update({ url })
-    }
-  } catch {
-    /* silent fallback */
-  }
+  chrome.runtime.sendMessage({ type: 'OPEN_INSTAGRAM_PROFILE', url })
 }

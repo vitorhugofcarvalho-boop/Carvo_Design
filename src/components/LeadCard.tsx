@@ -33,7 +33,7 @@ export function LeadCard({
           {lead.linkPerfil && (
             <button
               onClick={(e) => { e.stopPropagation(); openInstagramInTab(lead.linkPerfil) }}
-              className="rounded-md p-1 text-brand-platinum/60 transition-colors hover:text-brand-accent hover:bg-brand-accent/10"
+              className="cursor-pointer rounded-md p-1 text-brand-platinum/60 transition-colors hover:text-brand-accent hover:bg-brand-accent/10"
               title="Abrir perfil no Instagram"
             >
               <InstagramIcon className="size-4" />
