@@ -14,6 +14,9 @@ import {
   LogOut,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
+import { isEmbedded } from '@/utils/embedded'
+
+const embedded = isEmbedded()
 
 const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -52,9 +55,9 @@ export function Layout() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col md:flex-row">
+    <div className={`flex min-h-dvh flex-col ${embedded ? '' : 'md:flex-row'}`}>
       {/* Header mobile */}
-      <header className="flex items-center justify-between border-b border-brand-deep-hover bg-brand-base px-4 py-3 md:hidden">
+      <header className={`flex items-center justify-between border-b border-brand-deep-hover bg-brand-base px-3 py-2.5 ${embedded ? '' : 'md:hidden'}`}>
         <div>
           <span className="text-base font-bold text-brand-platinum" style={{ fontFamily: 'var(--font-heading)' }}>
             Prospect<span className="text-brand-primary">OS</span>
@@ -70,7 +73,7 @@ export function Layout() {
       </header>
 
       {/* Sidebar desktop */}
-      <aside className="hidden w-56 shrink-0 flex-col border-r border-brand-deep-hover bg-brand-base p-4 md:flex md:h-dvh md:sticky md:top-0">
+      <aside className={`${embedded ? 'hidden' : 'hidden w-56 shrink-0 flex-col border-r border-brand-deep-hover bg-brand-base p-4 md:flex md:h-dvh md:sticky md:top-0'}`}>
         <div className="mb-8 px-2 pt-2">
           <span className="text-lg font-bold text-brand-platinum" style={{ fontFamily: 'var(--font-heading)' }}>
             Prospect<span className="text-brand-primary">OS</span>
@@ -109,14 +112,14 @@ export function Layout() {
       </aside>
 
       {/* Conteúdo */}
-      <main className="flex-1 overflow-x-hidden p-4 pb-24 md:p-6 md:pb-6">
+      <main className={`flex-1 overflow-x-hidden ${embedded ? 'p-2 pb-16' : 'p-4 pb-24 md:p-6 md:pb-6'}`}>
         <div key={location.pathname} className="anim-fade mx-auto max-w-6xl">
           <Outlet />
         </div>
       </main>
 
       {/* Bottom-nav mobile */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-brand-deep-hover bg-brand-base md:hidden">
+      <nav className={`fixed inset-x-0 bottom-0 z-40 flex border-t border-brand-deep-hover bg-brand-base ${embedded ? '' : 'md:hidden'}`}>
         {NAV_PRIMARIA.map((item) => {
           const Icone = item.icon
           return (

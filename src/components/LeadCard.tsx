@@ -4,6 +4,8 @@ import { Badge } from './ui/Badge'
 import { Card } from './ui/Card'
 import { formatarSeguidores, dataRelativa, formatarData } from '@/utils/formatting'
 import { STATUS_LEAD } from '@/types'
+import { InstagramIcon } from './ui/InstagramIcon'
+import { openInstagramInTab } from '@/utils/embedded'
 
 export function LeadCard({
   lead,
@@ -27,7 +29,18 @@ export function LeadCard({
             @{lead.perfilInstagram || 'sem perfil'}
           </p>
         </div>
-        <Badge className={prioInfo.cor + ' shrink-0'}>{prioInfo.rotulo}</Badge>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {lead.linkPerfil && (
+            <button
+              onClick={(e) => { e.stopPropagation(); openInstagramInTab(lead.linkPerfil) }}
+              className="rounded-md p-1 text-brand-platinum/60 transition-colors hover:text-brand-accent hover:bg-brand-accent/10"
+              title="Abrir perfil no Instagram"
+            >
+              <InstagramIcon className="size-4" />
+            </button>
+          )}
+          <Badge className={prioInfo.cor}>{prioInfo.rotulo}</Badge>
+        </div>
       </div>
 
       <div className="mt-2 flex flex-wrap gap-1.5">

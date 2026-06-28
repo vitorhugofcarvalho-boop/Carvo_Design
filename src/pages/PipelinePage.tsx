@@ -9,6 +9,8 @@ import { StatusSelect } from '@/components/StatusSelect'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Layers } from 'lucide-react'
 import { dataRelativa } from '@/utils/formatting'
+import { openInstagramInTab } from '@/utils/embedded'
+import { InstagramIcon } from '@/components/ui/InstagramIcon'
 
 const COLUNAS_VISIVEIS: LeadStatus[] = [
   'captado',
@@ -99,7 +101,18 @@ export function PipelinePage() {
                           </div>
                           <p className="text-[11px] text-brand-platinum/40">@{l.perfilInstagram}</p>
                         </div>
-                        <Badge className={prioInfo.cor + ' shrink-0'}>{prioInfo.rotulo}</Badge>
+                        <div className="flex items-center gap-1 shrink-0">
+                          {l.linkPerfil && (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); openInstagramInTab(l.linkPerfil) }}
+                              className="rounded p-0.5 text-brand-platinum/60 transition-colors hover:text-brand-accent"
+                              title="Abrir perfil no Instagram"
+                            >
+                              <InstagramIcon className="size-3.5" />
+                            </button>
+                          )}
+                          <Badge className={prioInfo.cor + ' shrink-0'}>{prioInfo.rotulo}</Badge>
+                        </div>
                       </div>
 
                       {(l.nicho || l.produtoOferta) && (

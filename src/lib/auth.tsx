@@ -12,7 +12,7 @@
  */
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { User } from '@supabase/supabase-js'
+import type { User, Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
 
 interface AuthContextType {
@@ -46,7 +46,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null)
     })
 
-    return () => subscription.unsubscribe()
+    // Escuta sessão vinda da extensão (modo embedded)
+    function handleMessage(event: MessageEvent) {
+      if (
+        event.data?.source === 'prospectos-extension' &&
+        event.data?.type === 'SET_SESSION' &&
+        event.data?.session &&
+        supabase
+      ) {
+        const sessionData = event.data.session as Session
+        supabase.auth.setSession(sessionData).then(({ data, error }) => {
+          if (!error && data.session) {
+            setUser(data.session.user)
+          }
+        })
+      }
+    }
+    window.addEventListener('message', handleMessage)
+
+    return () => {
+      subscription.unsubscribe()
+      window.removeEventListener('message', handleMessage)
+    }
   }, [])
 
   const login = useCallback(async (email: string, password: string) => {

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ExternalLink, Camera, Trash2, Edit } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Trash2, Edit } from 'lucide-react'
 import { useLeads } from '@/hooks/useLeads'
 import type { Lead, ContactRecord } from '@/types'
 import { STATUS_LEAD, PRIORIDADE } from '@/types'
@@ -17,6 +17,8 @@ import { MessageTemplates } from '@/components/MessageTemplates'
 import { StatusSelect } from '@/components/StatusSelect'
 import { formatarData, formatarSeguidores, dataRelativa, timestampParaInputDate, dataParaTimestamp } from '@/utils/formatting'
 import { actionStore } from '@/data/actionStore'
+import { openInstagramInTab } from '@/utils/embedded'
+import { InstagramIcon } from '@/components/ui/InstagramIcon'
 
 export function LeadDetailPage() {
   const { id = '' } = useParams()
@@ -96,11 +98,9 @@ export function LeadDetailPage() {
         acao={
           <div className="flex flex-wrap gap-2">
             {instagramUrl && (
-              <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
-                <Button variante="secundario">
-                  <Camera className="size-4" /> Perfil
-                </Button>
-              </a>
+              <Button variante="secundario" onClick={() => openInstagramInTab(instagramUrl)}>
+                <InstagramIcon className="size-4" /> Perfil
+              </Button>
             )}
             {lead.linkOferta && (
               <a href={lead.linkOferta} target="_blank" rel="noopener noreferrer">
@@ -280,11 +280,9 @@ export function LeadDetailPage() {
 
           {/* Botões rápidos */}
           {instagramUrl && (
-            <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="block">
-              <Button variante="secundario" className="w-full">
-                <ExternalLink className="size-4" /> Abrir perfil no Instagram
-              </Button>
-            </a>
+            <Button variante="secundario" className="w-full" onClick={() => openInstagramInTab(instagramUrl)}>
+              <InstagramIcon className="size-4" /> Abrir perfil no Instagram
+            </Button>
           )}
         </div>
       </div>

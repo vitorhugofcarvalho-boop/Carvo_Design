@@ -22,6 +22,9 @@
       "run_at": "document_idle"
     }
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-src https://* http://localhost:*"
+  },
   "icons": {
     "16": "icon.svg",
     "48": "icon.svg",

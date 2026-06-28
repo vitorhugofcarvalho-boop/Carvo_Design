@@ -3,12 +3,24 @@ import { createClient, type SupabaseClient, type Session } from '@supabase/supab
 let client: SupabaseClient | null = null
 
 export function getSupabaseClient(url: string, anonKey: string): SupabaseClient {
+  return _getSupabaseClient(url, anonKey)
+}
+
+export async function getSession(url: string, anonKey: string): Promise<Session | null> {
+  if (!url || !anonKey) return null
+  const supabase = _getSupabaseClient(url, anonKey)
+  const { data } = await supabase.auth.getSession()
+  return data.session
+}
+
+function _getSupabaseClient(url: string, anonKey: string): SupabaseClient {
   if (!client || client.supabaseUrl !== url || client.supabaseKey !== anonKey) {
     client = createClient(url, anonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: false,
+        storageKey: 'prospectos-capture-auth',
       },
     })
   }
